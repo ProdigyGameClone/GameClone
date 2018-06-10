@@ -35,7 +35,7 @@ class Horse {
 		this.context.drawImage(horseImage,
 			x, y,
 			this.size[0], this.size[1],
-			window.innerWidth / 4, window.innerHeight / 1.6,
+			window.innerWidth / 4, window.innerHeight / 1.8,
 			this.size[0], this.size[1]);
 	}
 }
