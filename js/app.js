@@ -4,9 +4,13 @@ class GameField {
 		this.canvas.width = window.innerWidth;
 		this.canvas.height = window.innerHeight;
 		this.initHorse();
-		this.initScore();
+		this.initScore(100, 100);
 		this.initSpells();
 		window.addEventListener('resize', this.resizeCanvas, false);
+		const imageWidth = 150, 
+		imageHeight = 150;
+		this.canvas.addEventListener('click', (e)=> { this.chooseSpell(e, imageWidth, imageHeight);				
+		});
 	}
 
 	initHorse() {
@@ -19,13 +23,13 @@ class GameField {
 		});
 	}
 
-	initScore() {
+	initScore(mainCharacterHp, villianHp) {
 		let width = window.innerWidth, height = window.innerHeight;
 		let starImage = new Image();
 		starImage.src = 'images/star.png';
 		starImage.addEventListener('load', () => {
-			this.scoreMainCharacter = new Score(starImage, this.canvas, this.context, [width / 35, height / 25], [width / 10, width / 10], 1, 100);
-			this.scoreVillian = new Score(starImage, this.canvas, this.context, [width - width / 10 - width / 35, height / 25], [width / 10, width / 10], -1, 70);
+			this.scoreMainCharacter = new Score(starImage, this.canvas, this.context, [width / 35, height / 25], [width / 10, width / 10], 1, mainCharacterHp);
+			this.scoreVillian = new Score(starImage, this.canvas, this.context, [width - width / 10 - width / 35, height / 25], [width / 10, width / 10], -1, villianHp);
 		})
 	}
 
@@ -38,8 +42,6 @@ class GameField {
 		this.context.fillText("Spells", window.innerWidth / 2, window.innerHeight / 1.22);
 		let health = new Image();
 		health.src = 'images/heart.png';
-		const imageWidth = 150, 
-		imageHeight = 150;
 		let sword = new Image();
 		sword.src = 'images/sword.png';
 		health.addEventListener('load', () => {
@@ -49,8 +51,6 @@ class GameField {
 		sword.addEventListener('load', () => {
 			this.context.drawImage(sword, window.innerWidth / 1.85, window.innerHeight / 1.2, 150, 150 );
 
-		});
-		this.canvas.addEventListener('click', (e)=> { this.chooseSpell(e, imageWidth, imageHeight);				
 		});
 	}
 
@@ -67,8 +67,6 @@ class GameField {
 			if (pos.y >= window.innerHeight / 1.2 && pos.y <= window.innerHeight / 1.2 + imageHeight)
 				this.initTaskScreen('sword');
 		}
-
-
 	};
 
 	initTaskScreen(spell) {
@@ -76,7 +74,21 @@ class GameField {
 		this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 		cancelAnimationFrame(this.animation);
 		this.canvas.style.background = background;
-		let task = new Task(this.canvas, this.context);
+			let observer = new EventObserver();
+		observer.subscribe(userAnswer => {
+			setTimeout(() => this.processUserAnswer(userAnswer), 1000);
+		});
+		let task = new Task(this.canvas, this.context, observer);
+	}
+
+	processUserAnswer(userAnswer) {
+		this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+		let background = "url('images/platformer_background_3.png')";
+		this.canvas.style.background = background;
+		this.scoreMainCharacter.hp -= 10;
+		this.initSpells();
+		this.main();
+
 	}
 
 	get context () {
