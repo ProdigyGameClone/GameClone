@@ -4,6 +4,7 @@ class GameField {
 		this.canvas.width = window.innerWidth;
 		this.canvas.height = window.innerHeight;
 		this.initHorse();
+		this.initMonster();
 		this.initScore(100, 100);
 		this.initSpells();
 		window.addEventListener('resize', this.resizeCanvas, false);
@@ -14,6 +15,7 @@ class GameField {
 	}
 
 	initHorse() {
+		let width = window.innerWidth, height = window.innerHeight;
 		let horseImage = new Image();
 		horseImage.src = 'images/horse.png';
 		horseImage.addEventListener('load', () => {
@@ -31,6 +33,20 @@ class GameField {
 			this.scoreMainCharacter = new Score(starImage, this.canvas, this.context, [width / 35, height / 25], [width / 10, width / 10], 1, mainCharacterHp);
 			this.scoreVillian = new Score(starImage, this.canvas, this.context, [width - width / 10 - width / 35, height / 25], [width / 10, width / 10], -1, villianHp);
 		})
+	}
+
+	initMonster() {
+		let width = window.innerWidth, height = window.innerHeight;
+		let monsterBodyImage = new Image();
+		monsterBodyImage.src = 'images/body/' + getRandomInt(1,5) + '.png';
+		let monsterHeadImage = new Image();
+		monsterHeadImage.src = 'images/head/' + getRandomInt(1,12) + '.png';
+		let monsterWeaponsImage = new Image();
+		monsterWeaponsImage.src = 'images/weapons/' + getRandomInt(1,9) + '.png';
+		monsterBodyImage.addEventListener('load', () => {
+			this.monster = new Monster(monsterBodyImage, monsterHeadImage, monsterWeaponsImage, this.canvas, this.context, 
+				[width*2/3, height*3/5], [width/7, width/7], 2, 30);
+		});
 	}
 
 	initSpells() {
@@ -97,11 +113,13 @@ class GameField {
 
 	main() {
 		this.context.clearRect(window.innerWidth / 4, window.innerHeight / 1.8, 334, 266);
+		this.context.clearRect(window.innerWidth * 2 / 3, window.innerHeight * 3 / 6, window.innerWidth / 7, window.innerWidth / 7 + window.innerHeight * 3 / 5 / 4);
 		let now = Date.now();
 		let dt = (now - this.lastTime) / 1000.0;
 
 		this.update(dt);
 		this.mainCharacter.render();
+		this.monster.render();
 		this.scoreMainCharacter.render();
 		this.scoreVillian.render();
 
@@ -111,6 +129,7 @@ class GameField {
 
 	update(dt) {
 		this.mainCharacter.update(dt);    
+		this.monster.update();
 	}
 
 	resizeCanvas() {
