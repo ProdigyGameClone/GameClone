@@ -1,8 +1,10 @@
 class Task {
-	constructor(canvas, context, observer) {
+	constructor(canvas, context, spell, observer) {
 		this.canvas = canvas;
 		this.context = context;
+		this.spell = spell;
 		this.observer = observer;
+		this.context.textAlign = "center"; 
 		this.initTaskField();
 		this.initAnswerButton();
 		this.generateTask();
@@ -12,9 +14,8 @@ class Task {
 	initTaskField() {
 		this.context.fillStyle = "rgba(0, 0, 0, 0.8)";
 		this.context.fillRect(window.innerWidth / 5, window.innerHeight / 3.5, window.innerWidth * 0.6, window.innerHeight * 0.6);
-		this.context.textAlign="center"; 
-		this.context.textBaseline = "middle";
 		this.context.fillStyle = "white";
+		this.context.font = "30pt Arial";
 		this.context.fillText("Your Task is", window.innerWidth * 0.5, window.innerHeight * 0.4);
 	}
 
@@ -23,7 +24,10 @@ class Task {
 		let taskOperations = ['+', '-', '*'];
 		this.taskNumbers.push(Math.trunc(Math.random() * 100));
 		this.taskNumbers.push(taskOperations[Math.floor(Math.random() * taskOperations.length)]); 
-		this.taskNumbers.push(Math.trunc(Math.random() * 100));
+		let digitNumber = 100;
+		if (this.taskNumbers[1] == '*')
+			digitNumber = 10;
+		this.taskNumbers.push(Math.trunc(Math.random() * digitNumber));
 	}
 
 	printTask() {
@@ -44,7 +48,6 @@ class Task {
 		let buttonWidth = 200,
 		buttonHeight = 90;
 		this.context.fillRect(window.innerWidth / 2.25, window.innerHeight / 1.5, buttonWidth, buttonHeight);
-		this.context.textAlign="center"; 
 		this.context.fillStyle = "black";
 		this.context.fillText("Aswer!", window.innerWidth / 2.01, window.innerHeight / 1.4);
 		this.clickAnswerButton(buttonWidth, buttonHeight);

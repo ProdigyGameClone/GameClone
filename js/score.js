@@ -23,6 +23,6 @@ class Score {
             this.size[0], this.size[1]);
 
         this.context.font = "italic 30pt Arial";
-        this.context.fillText(this.hp, this.pos[0] + this.size[0] * 0.25, this.pos[1] + this.size[1] * 0.65);
+        this.context.fillText(this.hp, this.pos[0] + this.size[0] * 0.35, this.pos[1] + this.size[1] * 0.65);
     }
 }
