@@ -17,12 +17,15 @@ class Monster {
         this.relativeLocation = (this.count < this.jumpHeight) ? 
             this.relativeLocation + this.speed : this.relativeLocation - this.speed;
         this.count++;
-        if (this.count > 2 * this.jumpHeight) {
+        if (this.count >= 2 * this.jumpHeight) {
             this.count = 0;
         }
     }
 
     render() {
+        this.context.clearRect(this.pos[0], this.pos[1] - this.jumpHeight,
+            this.size[0], this.size[1] + 3 * this.jumpHeight);
+
         this.context.drawImage(this.bodyImage,
             this.pos[0], this.relativeLocation + this.pos[1] + this.size[1] / 4,
             this.size[0] / 2, this.size[1] * 2 / 3);

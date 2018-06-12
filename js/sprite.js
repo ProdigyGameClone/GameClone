@@ -31,11 +31,15 @@ class Horse {
 
 		let horseImage = new Image();
 		horseImage.src = this.url;
+		let width = window.innerWidth, height = window.innerHeight;
+
+		this.context.clearRect(width*0.1, height*0.45,
+			width*0.25, height*0.35);
 
 		this.context.drawImage(horseImage,
 			x, y,
 			this.size[0], this.size[1],
-			window.innerWidth / 4, window.innerHeight / 1.8,
-			this.size[0], this.size[1]);
+			width*0.1, height*0.45,
+			width*0.25, height*0.35);
 	}
 }
