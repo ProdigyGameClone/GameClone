@@ -3,9 +3,11 @@ class GameField {
 		this.canvas = document.getElementById('canvas');	
 		this.canvas.width = window.innerWidth;
 		this.canvas.height = window.innerHeight;
+		this.round = 1;
 		this.initHorse();
 		this.initMonster();
-		this.initScore(100, 100);
+		this.initScore(100, 50);
+		this.initRound();
 		this.initSpells();
 		window.addEventListener('resize', this.resizeCanvas, false);
 		const imageWidth = 150, 
@@ -15,11 +17,11 @@ class GameField {
 	}
 
 	initHorse() {
-		let width = window.innerWidth, height = window.innerHeight;
 		let horseImage = new Image();
 		horseImage.src = 'images/horse.png';
 		horseImage.addEventListener('load', () => {
-			this.mainCharacter = new Horse(this.canvas, this.context, 'images/horse.png', [0, 0], [334,266], 3, [0,1,2,3,2,1]);
+			this.mainCharacter = new Horse(this.canvas, this.context, 'images/horse.png', 
+				[0, 0], [334,266], 3, [0,1,2,3,2,1]);
 			this.lastTime = Date.now();
 			this.main();
 		});
@@ -32,7 +34,10 @@ class GameField {
 		starImage.addEventListener('load', () => {
 			this.scoreMainCharacter = new Score(starImage, this.canvas, this.context, [width / 35, height / 25], [width / 10, width / 10], 1, mainCharacterHp);
 			this.scoreVillian = new Score(starImage, this.canvas, this.context, [width - width / 10 - width / 35, height / 25], [width / 10, width / 10], -1, villianHp);
-		})
+			this.scoreMainCharacter.render();
+			this.scoreVillian.render();
+		});
+		
 	}
 
 	initMonster() {
@@ -45,8 +50,24 @@ class GameField {
 		monsterWeaponsImage.src = 'images/weapons/' + getRandomInt(1,9) + '.png';
 		monsterBodyImage.addEventListener('load', () => {
 			this.monster = new Monster(monsterBodyImage, monsterHeadImage, monsterWeaponsImage, this.canvas, this.context, 
-				[width*2/3, height*3/5], [width/7, width/7], 2, 30);
+				[width*0.7, height*0.4], [width/7, width/7], 2, 30);
 		});
+	}
+
+	initRound() {
+		let width = window.innerWidth, height = window.innerHeight;
+		let roundImage = new Image();
+		roundImage.src = 'images/star1.png';
+		roundImage.addEventListener('load', () => {
+			this.context.drawImage(roundImage,
+				width * 0.46, 0,
+				width * 0.1, width * 0.11);
+				this.context.fillStyle = "maroon";
+				this.context.font = "40pt Arial";
+				this.context.fillText(this.round, window.innerWidth * 0.495,  window.innerHeight * 0.13);
+				this.context.font = "italic 15pt Arial";
+				this.context.fillText("Round", window.innerWidth * 0.485,  window.innerHeight * 0.13 + 30);
+		}); 
 	}
 
 	initSpells() {
@@ -63,7 +84,6 @@ class GameField {
 		health.addEventListener('load', () => {
 			this.context.drawImage(health, window.innerWidth / 2.25, window.innerHeight / 1.2, 150, 150 );
 		});
-
 		sword.addEventListener('load', () => {
 			this.context.drawImage(sword, window.innerWidth / 1.85, window.innerHeight / 1.2, 150, 150 );
 
@@ -102,6 +122,9 @@ class GameField {
 		let background = "url('images/platformer_background_3.png')";
 		this.canvas.style.background = background;
 		this.scoreMainCharacter.hp -= 10;
+		this.scoreMainCharacter.render();
+		this.scoreVillian.render();
+		this.initRound();
 		this.initSpells();
 		this.main();
 
@@ -112,16 +135,17 @@ class GameField {
 	}
 
 	main() {
-		this.context.clearRect(window.innerWidth / 4, window.innerHeight / 1.8, 334, 266);
-		this.context.clearRect(window.innerWidth * 2 / 3, window.innerHeight * 3 / 6, window.innerWidth / 7, window.innerWidth / 7 + window.innerHeight * 3 / 5 / 4);
+		// this.context.clearRect(window.innerWidth / 4, window.innerHeight / 1.8, 334, 266);
+		// this.context.clearRect(window.innerWidth * 2 / 3, window.innerHeight * 3 / 6, window.innerWidth / 7, window.innerWidth / 7 + window.innerHeight * 3 / 5 / 4);
+		// this.context.clearRect(0, 0, window.innerWidth, window.innerHeight * 0.8);
 		let now = Date.now();
 		let dt = (now - this.lastTime) / 1000.0;
 
 		this.update(dt);
 		this.mainCharacter.render();
 		this.monster.render();
-		this.scoreMainCharacter.render();
-		this.scoreVillian.render();
+		// this.scoreMainCharacter.render();
+		// this.scoreVillian.render();
 
 		this.lastTime = now;
 		this.animation = requestAnimationFrame(() => this.main());
