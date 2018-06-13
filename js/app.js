@@ -1,5 +1,6 @@
 class GameField {
-	constructor () {
+	constructor (userName) {
+		this.user = new User(userName, 0);
 		this.canvas = document.getElementById('canvas');	
 		this.canvas.width = window.innerWidth;
 		this.canvas.height = window.innerHeight;
@@ -7,7 +8,8 @@ class GameField {
 		this.roundWeight = 25;
 		this.initHorse();
 		this.initMonster();
-		this.initScore(80, 10);
+		this.monsterFullName = this.generateMonsterName();
+		this.initScore(100, 10);
 		this.initRound();
 		this.initSpells();
 		window.addEventListener('resize', this.resizeCanvas, false);
@@ -21,7 +23,7 @@ class GameField {
 		let horseImage = new Image();
 		horseImage.src = 'images/horse.png';
 		horseImage.addEventListener('load', () => {
-			this.mainCharacter = new Horse(this.canvas, this.context, 'images/horse.png', 
+			this.mainCharacter = new Horse(this.canvas, this.context, horseImage, 
 				[0, 0], [334,266], 3, [0,1,2,3,2,1]);
 			this.lastTime = Date.now();
 			this.main();
@@ -33,8 +35,8 @@ class GameField {
 		let starImage = new Image();
 		starImage.src = 'images/star.png';
 		starImage.addEventListener('load', () => {
-			this.scoreMainCharacter = new Score(starImage, this.canvas, this.context, [width / 35, height / 25], [width / 10, width / 10], 1, mainCharacterHp);
-			this.scoreVillian = new Score(starImage, this.canvas, this.context, [width - width / 10 - width / 35, height / 25], [width / 10, width / 10], -1, villianHp);
+			this.scoreMainCharacter = new Score(this.user.characterName, starImage, this.canvas, this.context, [width / 35, height / 25], [width / 10, width / 10], 1, mainCharacterHp);
+			this.scoreVillian = new Score(this.monsterFullName,starImage, this.canvas, this.context, [width - width / 10 - width / 35, height / 25], [width / 10, width / 10], -1, villianHp);
 			this.scoreMainCharacter.render();
 			this.scoreVillian.render();
 		});
@@ -51,8 +53,15 @@ class GameField {
 		monsterWeaponsImage.src = 'images/weapons/' + getRandomInt(1,9) + '.png';
 		monsterBodyImage.addEventListener('load', () => {
 			this.monster = new Monster(monsterBodyImage, monsterHeadImage, monsterWeaponsImage, this.canvas, this.context, 
-				[width*0.7, height*0.4], [width/7, width/7], 2, 30);
+				[width * 0.7, height * 0.4], [width / 7, width / 7], 2, 30);
 		});
+	} 
+
+	generateMonsterName() {
+		let adj = ["Terrible", "Spiteful", "Snotty"];
+		let type = ["Ogre", "Gnome", "Goblin"];
+		let name = ["Max", "Tom", "John"];
+		return adj[getRandomInt(0, adj.length - 1)] + ' ' + type[getRandomInt(0, type.length - 1)] + ' ' + name[getRandomInt(0, name.length - 1)];
 	}
 
 	initRound() {
@@ -84,6 +93,7 @@ class GameField {
 		sword.src = 'images/sword.png';
 		health.addEventListener('load', () => {
 			this.context.drawImage(health, window.innerWidth / 2.25, window.innerHeight / 1.2, window.innerWidth / 11, window.innerHeight / 6);
+		
 		});
 		sword.addEventListener('load', () => {
 			this.context.drawImage(sword, window.innerWidth / 1.85, window.innerHeight / 1.2, window.innerWidth / 11, window.innerHeight / 6);
@@ -100,9 +110,6 @@ class GameField {
 			if (pos.y >= window.innerHeight / 1.2 && pos.y <= window.innerHeight / 1.2 + imageHeight)
 				if (this.scoreMainCharacter.hp < 100)
 					this.initTaskScreen('health');
-				else {
-					alert("You have 100 hp!");
-				}
 			}
 			if (pos.x >= window.innerWidth / 1.85 && pos.x <= window.innerWidth / 1.85 + imageWidth) {
 				if (pos.y >= window.innerHeight / 1.2 && pos.y <= window.innerHeight / 1.2 + imageHeight)
@@ -137,6 +144,8 @@ class GameField {
 				this.scoreVillian.hp -= this.roundWeight;
 			if (this.scoreVillian.hp <= 0) {
 				this.round += 1;
+				this.user.defiatedMonstersNumber += 1;
+				this.scoreVillian.characterName = this.generateMonsterName();
 				this.scoreVillian.hp = 100;
 				this.scoreMainCharacter.hp = 100;
 				this.initMonster();
@@ -159,7 +168,11 @@ class GameField {
 			this.scoreMainCharacter.hp -= this.roundWeight;
 			let width = window.innerWidth, height = window.innerHeight;
 			this.context.clearRect(width / 35, height / 25, width / 10, width / 10);
-			this.scoreMainCharacter.render();
+			if (this.scoreMainCharacter.hp <= 0) {
+				let tableResults = new Table(this.user);
+			} else {
+				this.scoreMainCharacter.render();
+			}
 		}
 
 		main() {
@@ -183,8 +196,21 @@ class GameField {
 			this.canvas.width = window.innerWidth;
 			this.canvas.height = window.innerHeight;
 		}
+
+
 	}
 
 	document.addEventListener('DOMContentLoaded', function() {
-		let gameField = new GameField();
-	});
+		document.getElementById('start-game').addEventListener('click', () => {
+			let userName = document.forms['user-information'].elements['first-name'].value;
+			if (userName) {
+				let canvas = document.createElement('canvas');
+				document.body.appendChild(canvas);
+				canvas.id = 'canvas';
+				document.getElementById('greeting').remove();
+				let gameField = new GameField(userName);
+			}
+			else
+				document.getElementsByClassName('empty-name')[0].style.display = 'block';
+		});
+	})

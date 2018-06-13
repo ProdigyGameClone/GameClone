@@ -1,5 +1,6 @@
 class Score {
-    constructor(starImage, canvas, context, pos, size, direction, hp) {
+    constructor(name, starImage, canvas, context, pos, size, direction, hp) {
+        this.characterName = name;
         this.starImage = starImage;
         this.canvas = canvas;
         this.context = context;
@@ -23,6 +24,10 @@ class Score {
             this.size[0], this.size[1]);
 
         this.context.font = "italic 30pt Arial";
+        this.context.fillStyle = '#C71585';
+
+        this.context.fillText(this.characterName, window.innerWidth / 2 * (1 - this.direction) + this.direction * (this.context.measureText(this.characterName).width + 120), this.pos[1] + this.size[1] * 1.2);
+        this.context.fillStyle = 'yellow';
         this.context.fillText(this.hp, this.pos[0] + this.size[0] * 0.35, this.pos[1] + this.size[1] * 0.65);
     }
 }

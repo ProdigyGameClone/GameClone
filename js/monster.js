@@ -13,6 +13,7 @@ class Monster {
         this.relativeLocation = 0;
     }
 
+
     update() {
         this.relativeLocation = (this.count < this.jumpHeight) ? 
             this.relativeLocation + this.speed : this.relativeLocation - this.speed;

@@ -6,7 +6,6 @@
   <title>Prodigy Game Clone</title>
 
   <link rel="stylesheet" href="css/styles.css">
-  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"> -->
 
   <script type="text/javascript" src="js/app.js"></script> 
   <script type="text/javascript" src="js/sprite.js"></script> 
@@ -14,9 +13,33 @@
   <script type="text/javascript" src="js/score.js"></script> 
   <script type="text/javascript" src="js/observer.js"></script> 
   <script type="text/javascript" src="js/monster.js"></script>
+  <script type="text/javascript" src="js/user.js"></script> 
+  <script type="text/javascript" src="js/table.js"></script>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
+  <div id="greeting" class="greeting">
+      <h2>Welcome to Prodigy Game!</h2>
+      <h3>How to play?</h3>
+      <p>When the game starts, you and a monster have 100hp, and you are the first. Your character can choose a spell. After that, If you resolve a task correct, you will hit the monster. Then the moster's turn. The game ends when you haven't got any hp. If the monster die, you will move to the next level and fight with a new monster.</p>
+      <form id="user-information">
+        <input id="first-name" type="text" placeholder="First Name*" required="required">
+        <input id="start-game" type="button" value="Start Game">
+        <p class='empty-name'>Input your name, please</p>
+      </form>
+  </div>
+  <div id="results" class="results">
+    <h2>Top 10 results</h3>
+    <table id="table-result">
+      <tr class="table-row">
+        <th>First Name</th>
+        <th>Defeated monsters number</th>
+      </tr>
+      <tr class="pattern-row">
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
   <audio src="audio/background_audio.mp3" autoplay></audio>
 </body>
 </html>

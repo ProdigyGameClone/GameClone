@@ -2,6 +2,8 @@ body {
 	margin: 0;
 	width: 100%;
 	height: 100%;
+	font-size: 30px;
+	color: black;
 }
 
 canvas {
@@ -9,3 +11,55 @@ canvas {
 	display: block;
 	background-size: cover;
 }
+
+.greeting {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	position: fixed;
+	top: 200px;
+	left: 400px;
+	width: 1200px;
+	height: 600px;
+	background: #cfcfd1;
+	border-radius: 5px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+p {
+	text-align: center;
+}
+
+.empty-name {
+	font-size: 16px;
+	color: red;
+	display: none;
+}
+
+.results {
+	display: none;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	position: fixed;
+	top: 200px;
+	left: 400px;
+	width: 1200px;
+	height: 600px;
+	background: #cfcfd1;
+	color: black;
+}
+
+table {
+	width: 50%; 
+    background: #cfcfd1;
+    color: white;
+    border-spacing: 1px;
+ }
+
+   td, th {
+    background: maroon;
+    padding: 5px;
+   }
+
