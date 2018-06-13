@@ -1,9 +1,11 @@
 class Horse {
-	constructor(canvas, context, url, pos, size, speed, frames) {
+	constructor(canvas, context, url, imagePos, horsePos, size, horseSize, speed, frames) {
 		this.canvas = canvas;
 		this.context = context;
-		this.pos = pos;
+		this.imagePos = imagePos;
+		this.horsePos = horsePos;
 		this.size = size;
+		this.horseSize = horseSize;
 		this.speed = typeof speed === 'number' ? speed : 0;
 		this.frames = frames;
 		this._index = 0;
@@ -24,8 +26,8 @@ class Horse {
 		else {
 			frame = 0;
 		}
-		let x = this.pos[0];
-		let y = this.pos[1];
+		let x = this.imagePos[0];
+		let y = this.imagePos[1];
 
 		x += frame * this.size[0];
 
@@ -33,13 +35,13 @@ class Horse {
 		horseImage.src = this.url;
 		let width = window.innerWidth, height = window.innerHeight;
 
-		this.context.clearRect(width*0.1, height*0.45,
+		this.context.clearRect(this.horsePos[0], this.horsePos[1],
 			width*0.25, height*0.35);
 
 		this.context.drawImage(horseImage,
 			x, y,
 			this.size[0], this.size[1],
-			width*0.1, height*0.45,
-			width*0.25, height*0.35);
+			this.horsePos[0], this.horsePos[1],
+			this.horseSize[0], this.horseSize[1]);
 	}
 }

@@ -23,8 +23,8 @@ class Monster {
     }
 
     render() {
-        this.context.clearRect(this.pos[0], this.pos[1] - this.jumpHeight,
-            this.size[0], this.size[1] + 3 * this.jumpHeight);
+        this.context.clearRect(this.pos[0], this.pos[1],
+            this.size[0], this.size[1] + 2 * this.jumpHeight);
 
         this.context.drawImage(this.bodyImage,
             this.pos[0], this.relativeLocation + this.pos[1] + this.size[1] / 4,
