@@ -138,7 +138,9 @@ class GameField {
 		this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 		let background = "url('images/platformer_background_3.png')";
 		this.canvas.style.background = background;
+	
 		if (this.task.spell == 'health' && userAnswer) {
+			this.burst.addingHealth(this.mainCharacter.horsePos, this.mainCharacter.horseSize);
 			this.scoreMainCharacter.hp += Math.round(this.roundWeight * 1.1);
 			if (this.scoreMainCharacter.hp > 100)
 				this.scoreMainCharacter.hp = 100;
@@ -158,8 +160,12 @@ class GameField {
 		else
 			setTimeout(() => this.villianHit(), 1000);
 
-		// отака монстра 
-		// this.burst.strike(this.mainCharacter.horsePos, this.mainCharacter.horseSize, this.monster.pos);
+		///
+		if (!userAnswer) {
+			// отака монстра 
+			this.burst.strike(this.monster.pos, this.mainCharacter.horseSize, this.mainCharacter.horsePos);		
+		}
+		///
 
 		this.scoreMainCharacter.render();
 		this.scoreVillian.render();
@@ -169,10 +175,12 @@ class GameField {
 	}
 
 	initBurst() {
+		let heartsImage = new Image();
+		heartsImage.src = 'images/hearts.png';
 		let burstImage = new Image();
 		burstImage.src = 'images/burst.png';
 		burstImage.addEventListener('load', () => {
-			this.burst = new Burst(burstImage, this.canvas, this.context, [100, 100], 3);
+			this.burst = new Burst(burstImage, heartsImage, this.canvas, this.context, [100, 100], 7);
 		});
 	}
 
@@ -215,7 +223,7 @@ class GameField {
 
 document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('start-game').addEventListener('click', () => {
-		let userName = document.forms['user-information'].elements['first-name'].value;
+		let userName = 'Naty'; //document.forms['user-information'].elements['first-name'].value;
 		if (userName) {
 			let canvas = document.createElement('canvas');
 			document.body.appendChild(canvas);
