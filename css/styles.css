@@ -2,7 +2,7 @@ body {
 	margin: 0;
 	width: 100%;
 	height: 100%;
-	/* font-size: 30px; */
+	 font-size: 24px; 
 	color: black;
 }
 
@@ -18,10 +18,10 @@ canvas {
 	justify-content: flex-start;
 	align-items: center;
 	position: fixed;
-	/* top: 200px; */
-	/* left: 400px; */
-	/* width: 1200px; */
-	/* height: 600px; */
+	top: 20%; 
+	left: 20%; 
+	width: 60%; 
+	height: 50%; 
 	background: #cfcfd1;
 	border-radius: 5px;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -43,23 +43,23 @@ p {
 	justify-content: flex-start;
 	align-items: center;
 	position: fixed;
-	/* top: 200px; */
-	/* left: 400px; */
-	/* width: 1200px; */
-	/* height: 600px; */
+	top: 20%; 
+	left: 20%; 
+	width: 60%; 
+	height: 50%; 
 	background: #cfcfd1;
 	color: black;
 }
 
 table {
 	width: 50%; 
-    background: #cfcfd1;
-    color: white;
-    border-spacing: 1px;
- }
+	background: #cfcfd1;
+	color: white;
+	border-spacing: 1px;
+}
 
-   td, th {
-    background: maroon;
-    padding: 5px;
-   }
+td, th {
+	background: maroon;
+	padding: 5px;
+}
 

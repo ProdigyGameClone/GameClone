@@ -44,7 +44,6 @@ class GameField {
 			this.scoreMainCharacter.render();
 			this.scoreVillian.render();
 		});
-
 	}
 
 	initMonster() {
