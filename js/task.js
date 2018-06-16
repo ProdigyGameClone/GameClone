@@ -53,6 +53,7 @@ class Task {
 		this.input = document.createElement('input');
 		this.input.type = 'text';
 		this.input.style.position = 'fixed';
+		// this.input.style.width = '200px';
 		this.input.style.left = window.innerWidth * 0.45 + 'px';
 		this.input.style.top = window.innerHeight * 0.6 + 'px';
 		document.body.appendChild(this.input);

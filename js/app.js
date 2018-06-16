@@ -9,7 +9,7 @@ class GameField {
 		this.initHorse();
 		this.initMonster();
 		this.monsterFullName = this.generateMonsterName();
-		this.initScore(100, 10);
+		this.initScore(10, 10);
 		this.initRound();
 		this.initSpells();
 		// this.initBurst();
@@ -54,8 +54,11 @@ class GameField {
 		monsterHeadImage.src = 'images/head/' + getRandomInt(1, 12) + '.png';
 		let monsterWeaponsImage = new Image();
 		monsterWeaponsImage.src = 'images/weapons/' + getRandomInt(1, 9) + '.png';
+		let monsterBootsImage = new Image();
+		monsterBootsImage.src = 'images/boots/boots.png';
 		monsterBodyImage.addEventListener('load', () => {
-			this.monster = new Monster(monsterBodyImage, monsterHeadImage, monsterWeaponsImage, this.canvas, this.context,
+			this.monster = new Monster(monsterBodyImage, monsterHeadImage, monsterWeaponsImage, 
+				monsterBootsImage, getRandomInt(0, 14), this.canvas, this.context,
 				[width * 0.7, height * 0.4], [width / 7, width / 7], 2, 30);
 		});
 	}
