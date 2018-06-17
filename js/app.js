@@ -15,7 +15,7 @@ class GameField {
 		// this.initBurst();
 		window.addEventListener('resize', this.resizeCanvas, false);
 		const imageWidth = window.innerWidth / 11,
-			imageHeight = window.innerHeight / 6;
+		imageHeight = window.innerHeight / 6;
 		this.canvas.addEventListener('click', (e) => {
 			this.chooseSpell(e, imageWidth, imageHeight);
 		});
@@ -112,117 +112,133 @@ class GameField {
 			if (pos.y >= window.innerHeight / 1.2 && pos.y <= window.innerHeight / 1.2 + imageHeight)
 				if (this.scoreMainCharacter.hp < 100)
 					this.initTaskScreen('health');
+			}
+			if (pos.x >= window.innerWidth / 1.85 && pos.x <= window.innerWidth / 1.85 + imageWidth) {
+				if (pos.y >= window.innerHeight / 1.2 && pos.y <= window.innerHeight / 1.2 + imageHeight)
+					this.initTaskScreen('sword');
+			}
+		};
+
+
+		initTaskScreen(spell) {
+			let background = "url('images/platformer_background_1.png')";
+			this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+			cancelAnimationFrame(this.animation);
+			this.canvas.style.background = background;
+			let observer = new EventObserver();
+			observer.subscribe(userAnswer => {
+				setTimeout(() => this.processUserAnswer(userAnswer), 1000);
+			});
+			this.task = new Task(this.canvas, this.context, spell, observer);
 		}
-		if (pos.x >= window.innerWidth / 1.85 && pos.x <= window.innerWidth / 1.85 + imageWidth) {
-			if (pos.y >= window.innerHeight / 1.2 && pos.y <= window.innerHeight / 1.2 + imageHeight)
-				this.initTaskScreen('sword');
-		}
-	};
 
+		processUserAnswer(userAnswer) {
+			this.context.textAlign = "start";
+			this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+			let background = "url('images/platformer_background_3.png')";
+			this.canvas.style.background = background;
+			let flag = 0;
 
-	initTaskScreen(spell) {
-		let background = "url('images/platformer_background_1.png')";
-		this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-		cancelAnimationFrame(this.animation);
-		this.canvas.style.background = background;
-		let observer = new EventObserver();
-		observer.subscribe(userAnswer => {
-			setTimeout(() => this.processUserAnswer(userAnswer), 1000);
-		});
-		this.task = new Task(this.canvas, this.context, spell, observer);
-	}
+			if (this.task.spell == 'health' && userAnswer) {
+				this.burst.addingHealth(this.mainCharacter.horsePos, this.mainCharacter.horseSize);
+				this.scoreMainCharacter.hp += Math.round(this.roundWeight * 1.1);
+				if (this.scoreMainCharacter.hp > 100)
+					this.scoreMainCharacter.hp = 100;
+			}
+			else if (userAnswer) {
+				this.scoreVillian.hp -= this.roundWeight;
+				if (this.scoreVillian.hp > 0)
+					this.burst.strike(this.mainCharacter.horsePos, this.mainCharacter.horseSize, this.monster.pos);
+			}
 
-	processUserAnswer(userAnswer) {
-		this.context.textAlign = "start";
-		this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-		let background = "url('images/platformer_background_3.png')";
-		this.canvas.style.background = background;
-	
-		if (this.task.spell == 'health' && userAnswer) {
-			this.burst.addingHealth(this.mainCharacter.horsePos, this.mainCharacter.horseSize);
-			this.scoreMainCharacter.hp += Math.round(this.roundWeight * 1.1);
-			if (this.scoreMainCharacter.hp > 100)
+			else if (!userAnswer) {
+				this.burst.strike(this.monster.pos, this.mainCharacter.horseSize, this.mainCharacter.horsePos);
+				flag = 1;
+				this.villianHit();
+			}
+
+			if (this.scoreVillian.hp <= 0) {
+				this.round += 1;
+				this.user.defiatedMonstersNumber += 1;
+				this.scoreVillian.characterName = this.generateMonsterName();
+				this.scoreVillian.hp = 100;
 				this.scoreMainCharacter.hp = 100;
-		}
-		else if (userAnswer) {
-			this.burst.strike(this.mainCharacter.horsePos, this.mainCharacter.horseSize, this.monster.pos);
-			this.scoreVillian.hp -= this.roundWeight;
-		}
-		if (this.scoreVillian.hp <= 0) {
-			this.round += 1;
-			this.user.defiatedMonstersNumber += 1;
-			this.scoreVillian.characterName = this.generateMonsterName();
-			this.scoreVillian.hp = 100;
-			this.scoreMainCharacter.hp = 100;
-			this.initMonster();
-		}
-		else
-			setTimeout(() => this.villianHit(), 1000);
+				this.initMonster();
+			}
+			else if (!flag)
+				setTimeout(() => {
+					this.burst.strike(this.monster.pos, this.mainCharacter.horseSize, this.mainCharacter.horsePos);
+					this.villianHit();
 
-		///
-		if (!userAnswer) {
-			// отака монстра 
-			this.burst.strike(this.monster.pos, this.mainCharacter.horseSize, this.mainCharacter.horsePos);		
-		}
-		///
+				}, 3000);
 
-		this.scoreMainCharacter.render();
-		this.scoreVillian.render();
-		this.initRound();
-		this.initSpells();
-		this.main();
-	}
+			// if (this.scoreMainCharacter.hp <= 0) {
+			// 	setTimeout(() => {let tableResults = new Table(this.user);
+			// }
 
-	initBurst() {
-		let heartsImage = new Image();
-		heartsImage.src = 'images/hearts.png';
-		let burstImage = new Image();
-		burstImage.src = 'images/burst.png';
-		burstImage.addEventListener('load', () => {
-			this.burst = new Burst(burstImage, heartsImage, this.canvas, this.context, [100, 100], 7);
-		});
-	}
 
-	get context() {
-		return this.canvas.getContext('2d');
-	}
-
-	villianHit() {
-		this.scoreMainCharacter.hp -= this.roundWeight;
-		let width = window.innerWidth, height = window.innerHeight;
-		this.context.clearRect(width / 35, height / 25, width / 10, width / 10);
-		if (this.scoreMainCharacter.hp <= 0) {
-			let tableResults = new Table(this.user);
-		} else {
 			this.scoreMainCharacter.render();
+			this.scoreVillian.render();
+			this.initRound();
+			this.initSpells();
+			this.main();
+		}
+
+		initBurst() {
+			let heartsImage = new Image();
+			heartsImage.src = 'images/hearts.png';
+			let burstImage = new Image();
+			burstImage.src = 'images/burst.png';
+			burstImage.addEventListener('load', () => {
+				this.burst = new Burst(burstImage, heartsImage, this.canvas, this.context, [100, 100], 7);
+			});
+		}
+
+		get context() {
+			return this.canvas.getContext('2d');
+		}
+
+		villianHit() {
+			let width = window.innerWidth, height = window.innerHeight;
+			this.context.clearRect(width / 35, height / 25, width / 10, width / 10);
+			this.scoreMainCharacter.hp -= this.roundWeight;
+			this.scoreMainCharacter.render();
+			setTimeout(() => {
+					this.scoreMainCharacter.render();
+				}, 1000);
+			
+			if (this.scoreMainCharacter.hp <= 0) {
+				setTimeout(() => {
+					let tableResults = new Table(this.user);
+				},3000);
+			}
+		}
+
+		main() {
+			let now = Date.now();
+			let dt = (now - this.lastTime) / 1000.0;
+
+			this.update(dt);
+			this.mainCharacter.render();
+			this.monster.render();
+			this.lastTime = now;
+			this.animation = requestAnimationFrame(() => this.main());
+		};
+
+		update(dt) {
+			this.mainCharacter.update(dt);
+			this.monster.update();
+		}
+
+		resizeCanvas() {
+			this.canvas.width = window.innerWidth;
+			this.canvas.height = window.innerHeight;
 		}
 	}
 
-	main() {
-		let now = Date.now();
-		let dt = (now - this.lastTime) / 1000.0;
-
-		this.update(dt);
-		this.mainCharacter.render();
-		this.monster.render();
-		this.lastTime = now;
-		this.animation = requestAnimationFrame(() => this.main());
-	};
-
-	update(dt) {
-		this.mainCharacter.update(dt);
-		this.monster.update();
-	}
-
-	resizeCanvas() {
-		this.canvas.width = window.innerWidth;
-		this.canvas.height = window.innerHeight;
-	}
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-	document.getElementById('start-game').addEventListener('click', () => {
-		let userName = 'Naty'; //document.forms['user-information'].elements['first-name'].value;
+	document.addEventListener('DOMContentLoaded', function () {
+		document.getElementById('start-game').addEventListener('click', () => {
+		let userName =document.forms['user-information'].elements['first-name'].value;
 		if (userName) {
 			let canvas = document.createElement('canvas');
 			document.body.appendChild(canvas);
@@ -233,4 +249,4 @@ document.addEventListener('DOMContentLoaded', function () {
 		else
 			document.getElementsByClassName('empty-name')[0].style.display = 'block';
 	});
-})
+	})
