@@ -23,11 +23,11 @@ class GameField {
 
 	initHorse() {
 		let horseImage = new Image();
-		horseImage.src = 'images/horse.png';
+		horseImage.src = 'images/horse1.png';
 		horseImage.addEventListener('load', () => {
 			this.mainCharacter = new Horse(this.canvas, this.context, horseImage,
 				[0, 0], [window.innerWidth * 0.1, window.innerHeight * 0.4],
-				[334, 266], [window.innerWidth * 0.25, window.innerHeight * 0.35], 3, [0, 1, 2, 3, 2, 1]);
+				[160, 120], [window.innerWidth * 0.25, window.innerHeight * 0.35], 3, [0, 1, 2, 3, 2, 1]);
 			this.initBurst();
 			this.lastTime = Date.now();
 			this.main();
