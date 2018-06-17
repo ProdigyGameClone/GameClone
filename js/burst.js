@@ -14,7 +14,7 @@ class Burst {
 
     // sword
 
-    renderSword(pos1, size1, pos2) {
+    renderFire(pos1, size1, pos2) {
         let x, _x;
         if (pos1[0] < pos2[0]) {
             x = 0;
@@ -31,7 +31,7 @@ class Burst {
             this.size[0], this.size[1]);
     }
 
-    renderSword2(pos1, size1, pos2) {
+    renderBang(pos1, size1, pos2) {
         let x, _x;
         if (pos1[0] < pos2[0]) {
             x = 230;
@@ -49,7 +49,7 @@ class Burst {
     }
 
     drawing(pos1, size1, pos2) {
-        this.renderSword(pos1, size1, pos2);
+        this.renderFire(pos1, size1, pos2);
         this.update();
     }
 
@@ -73,6 +73,8 @@ class Burst {
             let burstAudio = new Audio ("audio/explosion.flac"); 
             burstAudio.play();          
         }, time);
+        setTimeout(() => this.renderBang(pos1, size1, pos2), time);
+
         setTimeout(() => this.clearingStrike(pos1, size1, pos2), time + 500);
     }
 
@@ -100,9 +102,13 @@ class Burst {
             this.update()
         };
         fn = setInterval(oneDrawing, dt);
+
         setTimeout(() => { fn2 = setInterval(oneClearing, dt);
         let healthAudio = new Audio ("audio/yeah.wav"); 
             healthAudio.play();    }, dt - 1);
+
+        setTimeout(() => { fn2 = setInterval(oneClearing, dt) }, dt * 0.6);
+
         setTimeout(() => clearInterval(fn), time);
         setTimeout(() => clearInterval(fn2), time);
     }

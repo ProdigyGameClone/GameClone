@@ -9,10 +9,9 @@ class GameField {
 		this.initHorse();
 		this.initMonster();
 		this.monsterFullName = this.generateMonsterName();
-		this.initScore(100, 10);
+		this.initScore(100, 100);
 		this.initRound();
 		this.initSpells();
-		// this.initBurst();
 		window.addEventListener('resize', this.resizeCanvas, false);
 		const imageWidth = window.innerWidth / 11,
 		imageHeight = window.innerHeight / 6;
@@ -23,11 +22,11 @@ class GameField {
 
 	initHorse() {
 		let horseImage = new Image();
-		horseImage.src = 'images/horse.png';
+		horseImage.src = 'images/horse1.png';
 		horseImage.addEventListener('load', () => {
 			this.mainCharacter = new Horse(this.canvas, this.context, horseImage,
 				[0, 0], [window.innerWidth * 0.1, window.innerHeight * 0.4],
-				[334, 266], [window.innerWidth * 0.25, window.innerHeight * 0.35], 3, [0, 1, 2, 3, 2, 1]);
+				[160, 120], [window.innerWidth * 0.25, window.innerHeight * 0.35], 3, [0, 1, 2, 3, 2, 1]);
 			this.initBurst();
 			this.lastTime = Date.now();
 			this.main();
@@ -54,8 +53,11 @@ class GameField {
 		monsterHeadImage.src = 'images/head/' + getRandomInt(1, 12) + '.png';
 		let monsterWeaponsImage = new Image();
 		monsterWeaponsImage.src = 'images/weapons/' + getRandomInt(1, 9) + '.png';
+		let monsterBootsImage = new Image();
+		monsterBootsImage.src = 'images/boots/boots.png';
 		monsterBodyImage.addEventListener('load', () => {
-			this.monster = new Monster(monsterBodyImage, monsterHeadImage, monsterWeaponsImage, this.canvas, this.context,
+			this.monster = new Monster(monsterBodyImage, monsterHeadImage, monsterWeaponsImage, 
+				monsterBootsImage, getRandomInt(0, 14), this.canvas, this.context,
 				[width * 0.7, height * 0.4], [width / 7, width / 7], 2, 30);
 		});
 	}
