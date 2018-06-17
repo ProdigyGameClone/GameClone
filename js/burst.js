@@ -63,15 +63,15 @@ class Burst {
         this.relativeLocation = 0;
         let fn;
         let dt = 30,
-        time = (Math.abs(pos2[0] - pos1[0]) - size1[0] - this.size[0] * 0.8) / this.speed * dt;
+            time = (Math.abs(pos2[0] - pos1[0]) - size1[0] - this.size[0] * 0.8) / this.speed * dt;
         let oneDrawing = () => this.drawing(pos1, size1, pos2);
         setTimeout(() => { fn = setInterval(oneDrawing, dt) }, 300);
         setTimeout(() => clearInterval(fn), time);
 
         setTimeout(() => {
-            this.renderSword2(pos1, size1, pos2);
-            let burstAudio = new Audio ("audio/explosion.flac"); 
-            burstAudio.play();          
+            this.renderBang(pos1, size1, pos2);
+            let burstAudio = new Audio("audio/explosion.flac");
+            burstAudio.play();
         }, time);
         setTimeout(() => this.renderBang(pos1, size1, pos2), time);
 
@@ -95,7 +95,7 @@ class Burst {
         this.relativeLocation = 0;
         let fn, fn2;
         let dt = 100,
-        time = (size[1] * 0.38) / this.speed * dt;
+            time = (size[1] * 0.38) / this.speed * dt;
         let oneDrawing = () => this.renderHealth(pos, size);
         let oneClearing = () => {
             this.clearingHearts(pos, size);
@@ -103,10 +103,8 @@ class Burst {
         };
         fn = setInterval(oneDrawing, dt);
 
-        setTimeout(() => { fn2 = setInterval(oneClearing, dt);
-        let healthAudio = new Audio ("audio/yeah.wav"); 
-            healthAudio.play();    }, dt - 1);
-
+        let healthAudio = new Audio("audio/yeah.wav");
+        healthAudio.play();
         setTimeout(() => { fn2 = setInterval(oneClearing, dt) }, dt * 0.6);
 
         setTimeout(() => clearInterval(fn), time);
