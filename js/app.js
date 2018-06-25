@@ -2,11 +2,10 @@ class GameField {
 	constructor(userName) {
 		this.user = new User(userName, 0);
 		this.round = 1;
-		this.roundWeight = 25;
 		this.initCanvas();
 		this.initMonster();
 		this.monsterFullName = this.generateMonsterName();
-		this.initScore(100, 100);
+		this.initScore(MAX_SCORE, MAX_SCORE);
 		this.initRound();
 		this.initSpells();
 	}
@@ -25,11 +24,11 @@ class GameField {
 
 	initHorse() {
 		let horseImage = new Image();
-		horseImage.src = 'images/horse1.png';
+		horseImage.src = HORSE_PATH;
 		horseImage.addEventListener('load', () => {
 			this.mainCharacter = new Horse(this.canvas, this.context, horseImage,
-				[0, 0], [window.innerWidth * 0.1, window.innerHeight * 0.4],
-				[160, 120], [window.innerWidth * 0.25, window.innerHeight * 0.35], 3, [0, 1, 2, 3, 2, 1]);
+				HORSE_PICTURE_POS, [window.innerWidth * 0.1, window.innerHeight * 0.4],
+				HORSE_PICTURE_SIZE, [window.innerWidth * 0.25, window.innerHeight * 0.35], HORSE_ANIMATION_SPEED, HORSE_FRAMES);
 			this.initBurst();
 			this.lastTime = Date.now();
 			this.main();
@@ -39,10 +38,14 @@ class GameField {
 	initScore(mainCharacterHp, villianHp) {
 		let width = window.innerWidth, height = window.innerHeight;
 		let starImage = new Image();
-		starImage.src = 'images/star.png';
+		starImage.src = STAR_PATH;
 		starImage.addEventListener('load', () => {
-			this.scoreMainCharacter = new Score(this.user.characterName, starImage, this.canvas, this.context, [width / 35, height / 25], [width / 10, width / 10], 1, mainCharacterHp);
-			this.scoreVillian = new Score(this.monsterFullName, starImage, this.canvas, this.context, [width - width / 10 - width / 35, height / 25], [width / 10, width / 10], -1, villianHp);
+			this.scoreMainCharacter = new Score(this.user.characterName, starImage, this.canvas, this.context, 
+				[width / 35, height / 25], [width / 10, width / 10], 
+				RIGHT_DIRECTION, mainCharacterHp);
+			this.scoreVillian = new Score(this.monsterFullName, starImage, this.canvas, this.context, 
+				[width - width / 10 - width / 35, height / 25], [width / 10, width / 10], 
+				LEFT_DIRECTION, villianHp);
 			this.scoreMainCharacter.render();
 			this.scoreVillian.render();
 		});
@@ -53,24 +56,25 @@ class GameField {
 		let monsterImagesNumber = 0;
 		let width = window.innerWidth, height = window.innerHeight;
 		let monsterBodyImage = new Image();
-		monsterBodyImage.src = `images/body/${getRandomInt(1, 5)}.png`;
+		monsterBodyImage.src = `images/body/${getRandomInt(1, BODY_IMAGES_NUMBER)}.png`;
 		monsterImagesArray.push(monsterBodyImage);
 		let monsterHeadImage = new Image();
-		monsterHeadImage.src = `images/head/${getRandomInt(1, 12)}.png`;
+		monsterHeadImage.src = `images/head/${getRandomInt(1, HEAD_IMAGES_NUMBER)}.png`;
 		monsterImagesArray.push(monsterHeadImage);
 		let monsterWeaponsImage = new Image();
-		monsterWeaponsImage.src = `images/weapons/${getRandomInt(1, 9)}.png`;
+		monsterWeaponsImage.src = `images/weapons/${getRandomInt(1, WEAPONS_IMAGES_NUMBER)}.png`;
 		monsterImagesArray.push(monsterWeaponsImage);
 		let monsterBootsImage = new Image();
-		monsterBootsImage.src = 'images/boots/boots.png';
+		monsterBootsImage.src = BOOTS_PATH;
 		monsterImagesArray.push(monsterBootsImage);
 		monsterImagesArray.forEach((image) => {
 			image.addEventListener('load', () => {
 				++monsterImagesNumber;
-				if (monsterImagesNumber == 4) {
-					this.monster = new Monster(monsterBodyImage, monsterHeadImage, monsterWeaponsImage, 
-						monsterBootsImage, getRandomInt(0, 14), this.canvas, this.context,
-						[width * 0.7, height * 0.4], [width / 7, width / 7], 2, 30);
+				if (monsterImagesNumber == MONSTER_PARTS_NUMBER) {
+					this.monster = new Monster(monsterBodyImage, monsterHeadImage, monsterWeaponsImage,
+						monsterBootsImage, getRandomInt(0, BOOTS_IMAGES_NUMBER - 1), this.canvas, this.context,
+						[width * 0.7, height * 0.4], [width / 7, width / 7], 
+						MONSTER_ANIMATION_SPEED, MONSTER_JUMP_HEIGHT);
 					this.initHorse();
 				}
 			})
@@ -78,16 +82,13 @@ class GameField {
 	}
 
 	generateMonsterName() {
-		let adjective = ["Terrible", "Spiteful", "Snotty"];
-		let type = ["Ogre", "Gnome", "Goblin"];
-		let name = ["Max", "Tom", "John"];
-		return `${adjective[getRandomInt(0, adjective.length - 1)]} ${type[getRandomInt(0, type.length - 1)]} ${name[getRandomInt(0, name.length - 1)]}`;
+		return `${ADJECTIVE[getRandomInt(0, ADJECTIVE.length - 1)]} ${TYPE[getRandomInt(0, TYPE.length - 1)]} ${NAME[getRandomInt(0, NAME.length - 1)]}`;
 	}
 
 	initRound() {
 		let width = window.innerWidth, height = window.innerHeight;
 		let roundImage = new Image();
-		roundImage.src = 'images/star1.png';
+		roundImage.src = STAR1_PATH;
 		roundImage.addEventListener('load', () => {
 			this.context.drawImage(roundImage,
 				width * 0.46, 0,
@@ -106,9 +107,9 @@ class GameField {
 		this.context.font = styles.spells.font;
 		this.context.fillText("Spells", window.innerWidth / 2, window.innerHeight / 1.22);
 		let health = new Image();
-		health.src = 'images/heart.png';
+		health.src = HEART_PATH;
 		let sword = new Image();
-		sword.src = 'images/sword.png';
+		sword.src = SWORD_PATH;
 		health.addEventListener('load', () => {
 			this.context.drawImage(health, window.innerWidth / 2.25, window.innerHeight / 1.2, window.innerWidth / 11, window.innerHeight / 6);
 
@@ -125,7 +126,7 @@ class GameField {
 		};
 		if (pos.x >= window.innerWidth / 2.25 && pos.x <= window.innerWidth / 2.25 + imageWidth) { //identify user's click
 			if (pos.y >= window.innerHeight / 1.2 && pos.y <= window.innerHeight / 1.2 + imageHeight) //user has clicked on health spell
-				if (this.scoreMainCharacter.hp < 100)
+				if (this.scoreMainCharacter.hp < MAX_SCORE)
 					this.initTaskScreen('health');
 			}
 			if (pos.x >= window.innerWidth / 1.85 && pos.x <= window.innerWidth / 1.85 + imageWidth) { //user has clicked on sword spell
@@ -136,33 +137,32 @@ class GameField {
 
 
 		initTaskScreen(spell) {
-			let background = "url('images/platformer_background_1.png')";
 			this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 			cancelAnimationFrame(this.animation);
-			this.canvas.style.background = background;
+			this.canvas.classList.add('taskScreen');
 			let observer = new EventObserver();
 			observer.subscribe(userAnswer => {
 				setTimeout(() => this.processUserAnswer(userAnswer), 1000);
 			});
 			this.task = new Task(this.canvas, this.context, spell, observer);
-		}
+		};
 
 		processUserAnswer(userAnswer) {
 			this.context.textAlign = styles.textAlign;
 			this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-			let background = "url('images/platformer_background_3.png')";
-			this.canvas.style.background = background;
+			this.canvas.classList.remove('taskScreen');
 			let flag = 0;
 
 			if (this.task.spell == 'health' && userAnswer) {
 				this.burst.addingHealth(this.mainCharacter.horsePos, this.mainCharacter.horseSize);
-				this.scoreMainCharacter.hp += Math.round(this.roundWeight * 1.1);
-				if (this.scoreMainCharacter.hp > 100)
-					this.scoreMainCharacter.hp = 100;
+				this.scoreMainCharacter.hp += Math.round(ROUND_WEIGHT * BOOST_FACTOR);
+				if (this.scoreMainCharacter.hp > MAX_SCORE)
+					this.scoreMainCharacter.hp = MAX_SCORE;
 			}
+
 			else if (userAnswer) {
-				this.scoreVillian.hp -= this.roundWeight;
-				if (this.scoreVillian.hp > 0)
+				this.scoreVillian.hp -= ROUND_WEIGHT;
+				if (this.scoreVillian.hp > MIN_SCORE)
 					this.burst.strike(this.mainCharacter.horsePos, this.mainCharacter.horseSize, this.monster.pos);
 			}
 
@@ -172,19 +172,18 @@ class GameField {
 				this.villianHit();
 			}
 
-			if (this.scoreVillian.hp <= 0) {
+			if (this.scoreVillian.hp <= MIN_SCORE) {
 				this.round += 1;
 				this.user.defiatedMonstersNumber += 1;
 				this.scoreVillian.characterName = this.generateMonsterName();
-				this.scoreVillian.hp = 100;
-				this.scoreMainCharacter.hp = 100;
+				this.scoreVillian.hp = MAX_SCORE;
+				this.scoreMainCharacter.hp = MAX_SCORE;
 				this.initMonster();
 			}
 			else if (!flag)
 				setTimeout(() => {
 					this.burst.strike(this.monster.pos, this.mainCharacter.horseSize, this.mainCharacter.horsePos);
 					this.villianHit();
-
 				}, 3000);
 
 			this.scoreMainCharacter.render();
@@ -196,11 +195,12 @@ class GameField {
 
 		initBurst() {
 			let heartsImage = new Image();
-			heartsImage.src = 'images/hearts.png';
+			heartsImage.src = HEARTS_PATH;
 			let burstImage = new Image();
-			burstImage.src = 'images/burst.png';
+			burstImage.src = BURST_PATH;
 			burstImage.addEventListener('load', () => {
-				this.burst = new Burst(burstImage, heartsImage, this.canvas, this.context, [100, 100], 7);
+				this.burst = new Burst(burstImage, heartsImage, this.canvas, this.context, 
+					BURST_SIZE, BURST_SPEED);
 			});
 		}
 
@@ -211,16 +211,16 @@ class GameField {
 		villianHit() {
 			let width = window.innerWidth, height = window.innerHeight;
 			this.context.clearRect(width / 35, height / 25, width / 10, width / 10);
-			this.scoreMainCharacter.hp -= this.roundWeight;
+			this.scoreMainCharacter.hp -= ROUND_WEIGHT;
 			this.scoreMainCharacter.render();
 			setTimeout(() => {
 				this.scoreMainCharacter.render();
 			}, 1000);
-			
-			if (this.scoreMainCharacter.hp <= 0) {
+
+			if (this.scoreMainCharacter.hp <= MIN_SCORE) {
 				setTimeout(() => {
 					let tableResults = new Table(this.user);
-				},3000);
+				}, 3000);
 			}
 		}
 

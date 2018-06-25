@@ -18,7 +18,7 @@ class Horse {
 
 	render() {
 		let frame;
-		if(this.speed > 0) {
+		if (this.speed > 0) {
 			let max = this.frames.length;
 			let idx = Math.floor(this._index);
 			frame = this.frames[idx % max];
@@ -35,7 +35,7 @@ class Horse {
 		let width = window.innerWidth, height = window.innerHeight;
 
 		this.context.clearRect(this.horsePos[0], this.horsePos[1],
-			width*0.25, height*0.35);
+			width * 0.25, height * 0.35);
 
 		this.context.drawImage(this.image,
 			x, y,

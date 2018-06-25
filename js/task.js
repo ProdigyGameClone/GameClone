@@ -25,7 +25,7 @@ class Task {
 		this.taskNumbers = [];
 		let taskOperations = ['+', '-', '*'];
 		this.taskNumbers.push(Math.trunc(Math.random() * 100));
-		this.taskNumbers.push(taskOperations[Math.floor(Math.random() * taskOperations.length)]); 
+		this.taskNumbers.push(taskOperations[Math.floor(Math.random() * taskOperations.length)]);
 		let digitNumber = 100;
 		if (this.taskNumbers[1] == '*')
 			digitNumber = 10;
@@ -62,7 +62,7 @@ class Task {
 	initAnswerButton() {
 		this.context.fillStyle = styles.task.answerButtonFillStyle;
 		let buttonWidth = 200,
-		buttonHeight = 90;
+			buttonHeight = 90;
 		this.context.fillRect(window.innerWidth / 2.25, window.innerHeight / 1.5, buttonWidth, buttonHeight);
 		this.context.fillStyle = styles.task.answerValueColor;
 		this.context.fillText("Aswer!", window.innerWidth / 2.01, window.innerHeight / 1.4);
@@ -82,40 +82,40 @@ class Task {
 				this.context.fillRect(0, window.innerHeight / 3, window.innerWidth, 400);
 				this.context.fillStyle = styles.task.answerValueColor;
 				this.possibleTasks[this.taskNumber][1].call(this);
-				
-				this.observer.broadcast(this.userAnswer);		
-			}			
+
+				this.observer.broadcast(this.userAnswer);
+			}
 		}
 		this.canvas.removeEventListener('click', this.listener);
 	}
 
 	checkNumberAnswer() {
-		if ( this.input.value == eval(this.taskNumbersString)) {
-			this.answerCorrect();		
+		if (this.input.value == eval(this.taskNumbersString)) {
+			this.answerCorrect();
 		}
-		else { 
-			this.answerIncorrect();	
+		else {
+			this.answerIncorrect();
 		}
 	}
 
 	checkTranslateAnswer() {
-		let currentWord = this.taskElem; 
+		let currentWord = this.taskElem;
 		if (dict[currentWord].indexOf(this.input.value.trim()) != -1) {
-			this.answerCorrect();			
+			this.answerCorrect();
 		}
-		else { 
+		else {
 			this.answerIncorrect();
 		}
 
 	}
 
 	answerCorrect() {
-		this.context.fillText("Correct!", window.innerWidth / 2.01, window.innerHeight / 1.8);	
-		this.userAnswer = true;	
+		this.context.fillText("Correct!", window.innerWidth / 2.01, window.innerHeight / 1.8);
+		this.userAnswer = true;
 	}
 
 	answerIncorrect() {
-		this.context.fillText("Incorrect!", window.innerWidth / 2.01, window.innerHeight / 1.8);	
+		this.context.fillText("Incorrect!", window.innerWidth / 2.01, window.innerHeight / 1.8);
 		this.userAnswer = false;
 	}
 }	
