@@ -15,6 +15,10 @@ canvas {
 	background-size: cover;
 }
 
+.taskScreen {
+	background: url('../images/platformer_background_1.png');
+}
+
 .greeting {
 	position: fixed;
 	top: 20%; 
@@ -35,7 +39,7 @@ h2 {
 	font-size: 50px;
 }
 
-h2 {
+h3 {
 	font-size: 40px;
 }
 

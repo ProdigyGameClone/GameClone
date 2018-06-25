@@ -23,7 +23,7 @@ class Table {
 		this.topResults.push(this.currentUser);
 
 		if (this.topResults.length > 1) {
-			this.topResults.sort((a,b) => {
+			this.topResults.sort((a, b) => {
 				return b.defiatedMonstersNumber - a.defiatedMonstersNumber;
 			});
 		}
@@ -39,7 +39,7 @@ class Table {
 		let cells = document.getElementsByTagName('td');
 		table.rows[1].cells[0].innerHTML = this.topResults[0].characterName;
 		table.rows[1].cells[1].innerHTML = this.topResults[0].defiatedMonstersNumber;
-		while(i <= 10 && this.topResults[i - 1]) {
+		while (i <= RECORDS_NUMBER && this.topResults[i - 1]) {
 			let newRow = row.cloneNode(true);
 			table.appendChild(newRow);
 			table.rows[i].cells[0].innerHTML = this.topResults[i - 1].characterName;
