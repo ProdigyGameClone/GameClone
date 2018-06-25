@@ -1,47 +1,46 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8">
-
-  <title>Prodigy Game Clone</title>
-
-  <link rel="stylesheet" href="css/styles.css">
-
-  <script type="text/javascript" src="js/app.js"></script> 
-  <script type="text/javascript" src="js/sprite.js"></script> 
-  <script type="text/javascript" src="js/task.js"></script> 
-  <script type="text/javascript" src="js/score.js"></script> 
-  <script type="text/javascript" src="js/observer.js"></script> 
-  <script type="text/javascript" src="js/monster.js"></script>
-  <script type="text/javascript" src="js/user.js"></script> 
-  <script type="text/javascript" src="js/table.js"></script>
-  <script type="text/javascript" src="js/burst.js"></script>
-  <script type="text/javascript" src="data/dictionary.js"></script>
+    <meta http-equiv="Content-Type" content="text/html" ; charset="UTF-8">
+    <title>Game</title>
+    <link rel="stylesheet" href="css/styleLP.css">
 </head>
+
 <body>
-  <div id="greeting" class="greeting">
-      <h2>Welcome to Prodigy Game!</h2>
-      <h3>How to play?</h3>
-      <p>When the game starts, you and a monster have 100hp, and you go first. Your character can choose a spell. After that, If you resolve a task correctly, you will hit the monster. Then it's the moster's turn. The game ends when you have got no hp. If the monster dies, you will move on to the next level and fight with a new monster.</p>
-      <form id="user-information">
-        <input id="first-name" type="text" placeholder="First Name*" required="required">
-        <input id="start-game" type="button" value="Start Game">
-        <p class='empty-name'>Input your name, please</p>
-      </form>
-  </div>
-  <div id="results" class="results">
-    <h2>Top 10 results</h2>
-    <table id="table-result">
-      <tr class="table-row">
-        <th>First Name</th>
-        <th>Defeated monsters number</th>
-      </tr>
-      <tr class="pattern-row">
-        <td></td>
-        <td></td>
-      </tr>
-    </table>
-  </div>
-  <audio src="audio/background_audio.mp3" autoplay loop></audio>
+    <header>
+        <a class="game" href="startGame.html">ProdigyGameClone</a>
+    </header>
+    <main>
+        <div>
+            Authors: Julia Margun, Natasha Borodyuk, Computer Systems and Networks Faculty, BSUIR, the second-year students
+        </div>
+        <h2>SCREENSHOTS</h2>
+        <h3>You can see how ProdigyGameClone looks like.</h3>
+        <div class="screenshots">
+            <img src="screenshots/screen0.jpg">
+            <img src="screenshots/screen1.jpg">
+            <img src="screenshots/screen2.jpg">
+            <img src="screenshots/screen3.jpg">
+            <img src="screenshots/screen4.jpg">
+        </div>
+        <div>
+            <h3>Julia:</h3>
+            <p>
+                Create and animate the main character; create task screen, where the fisrt task is to solve an example, the second screen
+                is for translating randomly chosen word into Russian; create an observer to observe when the task has been
+                resolved; create a results table to demonstrate top10 results; add burst and health audio; create rounds
+                and hit logic.
+            </p>
+        </div>
+        <div>
+            <h3>Natasha:</h3>
+            <p>
+                Create health points, create and animate the monster; create burst and health animation; add welcome and highscore screen's
+                style; edit a main character; create a dictionary; create styles for rounds; create the landing page.
+            </p>
+        </div>
+    </main>
 </body>
+
 </html>
