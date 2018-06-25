@@ -1,17 +1,20 @@
 class GameField {
 	constructor(userName) {
 		this.user = new User(userName, 0);
-		this.canvas = document.getElementById('canvas');
-		this.canvas.width = window.innerWidth;
-		this.canvas.height = window.innerHeight;
 		this.round = 1;
 		this.roundWeight = 25;
-		this.initHorse();
+		this.initCanvas();
 		this.initMonster();
 		this.monsterFullName = this.generateMonsterName();
 		this.initScore(100, 100);
 		this.initRound();
 		this.initSpells();
+	}
+
+	initCanvas() {
+		this.canvas = document.getElementById('canvas');
+		this.canvas.width = window.innerWidth;
+		this.canvas.height = window.innerHeight;
 		window.addEventListener('resize', this.resizeCanvas, false);
 		const imageWidth = window.innerWidth / 11,
 		imageHeight = window.innerHeight / 6;
@@ -46,27 +49,39 @@ class GameField {
 	}
 
 	initMonster() {
+		let monsterImagesArray = [];
+		let monsterImagesNumber = 0;
 		let width = window.innerWidth, height = window.innerHeight;
 		let monsterBodyImage = new Image();
-		monsterBodyImage.src = 'images/body/' + getRandomInt(1, 5) + '.png';
+		monsterBodyImage.src = `images/body/${getRandomInt(1, 5)}.png`;
+		monsterImagesArray.push(monsterBodyImage);
 		let monsterHeadImage = new Image();
-		monsterHeadImage.src = 'images/head/' + getRandomInt(1, 12) + '.png';
+		monsterHeadImage.src = `images/head/${getRandomInt(1, 12)}.png`;
+		monsterImagesArray.push(monsterHeadImage);
 		let monsterWeaponsImage = new Image();
-		monsterWeaponsImage.src = 'images/weapons/' + getRandomInt(1, 9) + '.png';
+		monsterWeaponsImage.src = `images/weapons/${getRandomInt(1, 9)}.png`;
+		monsterImagesArray.push(monsterWeaponsImage);
 		let monsterBootsImage = new Image();
 		monsterBootsImage.src = 'images/boots/boots.png';
-		monsterBodyImage.addEventListener('load', () => {
-			this.monster = new Monster(monsterBodyImage, monsterHeadImage, monsterWeaponsImage, 
-				monsterBootsImage, getRandomInt(0, 14), this.canvas, this.context,
-				[width * 0.7, height * 0.4], [width / 7, width / 7], 2, 30);
+		monsterImagesArray.push(monsterBootsImage);
+		monsterImagesArray.forEach((image) => {
+			image.addEventListener('load', () => {
+				++monsterImagesNumber;
+				if (monsterImagesNumber == 4) {
+					this.monster = new Monster(monsterBodyImage, monsterHeadImage, monsterWeaponsImage, 
+						monsterBootsImage, getRandomInt(0, 14), this.canvas, this.context,
+						[width * 0.7, height * 0.4], [width / 7, width / 7], 2, 30);
+					this.initHorse();
+				}
+			})
 		});
 	}
 
 	generateMonsterName() {
-		let adj = ["Terrible", "Spiteful", "Snotty"];
+		let adjective = ["Terrible", "Spiteful", "Snotty"];
 		let type = ["Ogre", "Gnome", "Goblin"];
 		let name = ["Max", "Tom", "John"];
-		return adj[getRandomInt(0, adj.length - 1)] + ' ' + type[getRandomInt(0, type.length - 1)] + ' ' + name[getRandomInt(0, name.length - 1)];
+		return `${adjective[getRandomInt(0, adjective.length - 1)]} ${type[getRandomInt(0, type.length - 1)]} ${name[getRandomInt(0, name.length - 1)]}`;
 	}
 
 	initRound() {
@@ -77,20 +92,18 @@ class GameField {
 			this.context.drawImage(roundImage,
 				width * 0.46, 0,
 				width * 0.1, width * 0.11);
-			this.context.fillStyle = "maroon";
-			this.context.font = "40pt Arial";
 			this.context.fillText(this.round, window.innerWidth * 0.504, window.innerHeight * 0.11);
-			this.context.font = "italic 15pt Arial";
+			this.context.font = styles.font;
 			this.context.fillText("Round", window.innerWidth * 0.495, window.innerHeight * 0.11 + 30);
 		});
 	}
 
 	initSpells() {
-		this.context.fillStyle = '#00a7be';
+		this.context.fillStyle = styles.fillStyle;
 		this.context.fillRect(window.innerWidth / 2.3, window.innerHeight / 1.2, window.innerWidth * 0.2, window.innerHeight * 0.2);
-		this.context.fillStyle = "maroon";
-		this.context.strokeStyle = "maroon";
-		this.context.font = "italic 30pt Arial";
+		this.context.fillStyle = styles.spells.fillStyle;
+		this.context.strokeStyle = styles.spells.strokeStyle;
+		this.context.font = styles.spells.font;
 		this.context.fillText("Spells", window.innerWidth / 2, window.innerHeight / 1.22);
 		let health = new Image();
 		health.src = 'images/heart.png';
@@ -110,12 +123,12 @@ class GameField {
 			x: e.clientX,
 			y: e.clientY
 		};
-		if (pos.x >= window.innerWidth / 2.25 && pos.x <= window.innerWidth / 2.25 + imageWidth) {
-			if (pos.y >= window.innerHeight / 1.2 && pos.y <= window.innerHeight / 1.2 + imageHeight)
+		if (pos.x >= window.innerWidth / 2.25 && pos.x <= window.innerWidth / 2.25 + imageWidth) { //identify user's click
+			if (pos.y >= window.innerHeight / 1.2 && pos.y <= window.innerHeight / 1.2 + imageHeight) //user has clicked on health spell
 				if (this.scoreMainCharacter.hp < 100)
 					this.initTaskScreen('health');
 			}
-			if (pos.x >= window.innerWidth / 1.85 && pos.x <= window.innerWidth / 1.85 + imageWidth) {
+			if (pos.x >= window.innerWidth / 1.85 && pos.x <= window.innerWidth / 1.85 + imageWidth) { //user has clicked on sword spell
 				if (pos.y >= window.innerHeight / 1.2 && pos.y <= window.innerHeight / 1.2 + imageHeight)
 					this.initTaskScreen('sword');
 			}
@@ -135,7 +148,7 @@ class GameField {
 		}
 
 		processUserAnswer(userAnswer) {
-			this.context.textAlign = "start";
+			this.context.textAlign = styles.textAlign;
 			this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 			let background = "url('images/platformer_background_3.png')";
 			this.canvas.style.background = background;
@@ -174,11 +187,6 @@ class GameField {
 
 				}, 3000);
 
-			// if (this.scoreMainCharacter.hp <= 0) {
-			// 	setTimeout(() => {let tableResults = new Table(this.user);
-			// }
-
-
 			this.scoreMainCharacter.render();
 			this.scoreVillian.render();
 			this.initRound();
@@ -206,8 +214,8 @@ class GameField {
 			this.scoreMainCharacter.hp -= this.roundWeight;
 			this.scoreMainCharacter.render();
 			setTimeout(() => {
-					this.scoreMainCharacter.render();
-				}, 1000);
+				this.scoreMainCharacter.render();
+			}, 1000);
 			
 			if (this.scoreMainCharacter.hp <= 0) {
 				setTimeout(() => {
@@ -240,15 +248,20 @@ class GameField {
 
 	document.addEventListener('DOMContentLoaded', function () {
 		document.getElementById('start-game').addEventListener('click', () => {
-		let userName =document.forms['user-information'].elements['first-name'].value;
-		if (userName) {
-			let canvas = document.createElement('canvas');
-			document.body.appendChild(canvas);
-			canvas.id = 'canvas';
-			document.getElementById('greeting').remove();
-			let gameField = new GameField(userName);
-		}
-		else
-			document.getElementsByClassName('empty-name')[0].style.display = 'block';
-	});
+			let userName =document.forms['user-information'].elements['first-name'].value;
+			if (userName) {
+				let canvas = document.createElement('canvas');
+				document.body.appendChild(canvas);
+				canvas.id = 'canvas';
+				document.getElementById('greeting').remove();
+				let gameField = new GameField(userName);
+			}
+			else {
+				let emptyName = document.getElementsByClassName('empty-name-hidden')[0];
+				if (emptyName) {
+					emptyName.classList.remove('empty-name-hidden');
+					emptyName.classList.add('empty-name');
+				}
+			}
+		});
 	})

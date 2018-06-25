@@ -19,7 +19,8 @@ class Table {
 		let canvas = document.getElementById('canvas');
 		canvas.remove();
 		let results = document.getElementById('results');
-		results.style.display = 'flex';
+		results.classList.remove('results-hidden');
+		results.classList.add('results');
 		this.topResults.push(this.currentUser);
 
 		if (this.topResults.length > 1) {
